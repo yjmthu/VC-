@@ -44,3 +44,5 @@
 *.VC.opendb
 *.VC.db-wal
 *.VC.db-shm
+*.db
+*.ipch
