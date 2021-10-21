@@ -41,3 +41,6 @@
 *.recipe
 *.lastbuildstate
 *.FileListAbsolute.txt
+*.VC.opendb
+*.VC.db-wal
+*.VC.db-shm
