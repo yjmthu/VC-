@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+# VC++
+
+*.pdb
+*.tlog
+*.idb
+*.ipdb
+*.iobj
+*.recipe
+*.lastbuildstate
+*.FileListAbsolute.txt
