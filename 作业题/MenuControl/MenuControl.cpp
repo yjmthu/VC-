@@ -1,21 +1,25 @@
 ﻿// MenuControl.cpp : 定义应用程序的入口点。
 //
-
+#include <utility>
+#include <vector>
 #include "framework.h"
 #include "MenuControl.h"
 
 #define MAX_LOADSTRING 100
 
+typedef BOOL(_stdcall* drawMethord) (HDC, int, int, int, int);
+
 // 全局变量:
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
+UCHAR drawMode = 0;
+drawMethord fuc[2] = { Ellipse,Rectangle };
 
 // 此代码模块中包含的函数的前向声明:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -123,19 +127,79 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    static const HMENU hmenu = GetMenu(hWnd);
+    static HMENU haddmenu = nullptr;
+    constexpr WCHAR menuNames[2][3] = {L"圆形", L"矩形"};
+    static std::vector<std::pair<bool, RECT>> history;
     switch (message)
     {
+    case WM_CREATE:
+        EnableMenuItem(hmenu, IDM_EXIT, MF_GRAYED);
+        break;
     case WM_COMMAND:
         {
-            int wmId = LOWORD(wParam);
-            // 分析菜单选择:
-            switch (wmId)
+            BOOL drawModeTemp = TRUE;
+            RECT rectClient;
+            GetClientRect(hWnd, &rectClient);
+            BOOL menuRect = TRUE;
+            double scale = 0.6;
+            switch (LOWORD(wParam))
             {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
+            case ID_32779:
+                history.clear();
+            case ID_32778:
+                if (history.size()) history.pop_back();
             case IDM_EXIT:
-                DestroyWindow(hWnd);
+                if (haddmenu)
+                    DeleteMenu(hmenu, 1, MF_BYPOSITION);
+                haddmenu = nullptr;
+                CheckMenuItem(hmenu, ID_Menu, MF_UNCHECKED);
+                CheckMenuItem(hmenu, ID_32772, MF_UNCHECKED);
+                EnableMenuItem(hmenu, IDM_EXIT, MF_GRAYED);
+                DrawMenuBar(hWnd);
+                InvalidateRect(hWnd, 0, TRUE);
+                break;
+            case ID_Menu:
+                menuRect = FALSE;
+            case ID_32772:
+                if (haddmenu) DeleteMenu(hmenu, 1, MF_BYPOSITION);
+                haddmenu = CreateMenu();
+                AppendMenu(haddmenu, MF_ENABLED, ID_32773, L"绘制图形");
+                AppendMenu(haddmenu, MF_ENABLED, ID_32774, L"移动图形");
+                AppendMenu(haddmenu, MF_ENABLED, ID_32775, L"放大");
+                AppendMenu(haddmenu, MF_ENABLED, ID_32776, L"缩小");
+                AppendMenu(haddmenu, MF_ENABLED, ID_32777, L"重绘");
+                AppendMenu(haddmenu, MF_ENABLED, ID_32778, L"清除本次");
+                InsertMenu(hmenu, 1, MF_POPUP | MF_BYPOSITION, (UINT)haddmenu, menuNames[menuRect]);
+                CheckMenuItem(hmenu, ID_Menu, menuRect ? MF_UNCHECKED: MF_CHECKED);
+                CheckMenuItem(hmenu, ID_32772, menuRect ? MF_CHECKED : MF_UNCHECKED);
+                EnableMenuItem(hmenu, IDM_EXIT, MF_ENABLED);
+                DrawMenuBar(hWnd);
+                history.emplace_back(menuRect, RECT{ rectClient.right / 2 - 50, rectClient.bottom / 2 - 50 , rectClient.right / 2 + 50, rectClient.bottom / 2 + 50 });
+            case ID_32773:
+                drawModeTemp = FALSE;
+            case ID_32774:
+                CheckMenuItem(haddmenu, ID_32773, drawModeTemp ? MF_UNCHECKED : MF_CHECKED);
+                CheckMenuItem(haddmenu, ID_32774, drawModeTemp ? MF_CHECKED : MF_UNCHECKED);
+                drawMode = drawModeTemp;
+                InvalidateRect(hWnd, 0, TRUE);
+                break;
+            case ID_32775:
+                scale = 1.6;
+            case ID_32776:
+            {
+                int x, y, w, h;
+                x = history.back().second.right + history.back().second.left;
+                y = history.back().second.bottom + history.back().second.top;
+                w = (history.back().second.right - history.back().second.left) * scale;
+                h = (history.back().second.bottom - history.back().second.top) * scale;
+                history.back().second = { (x - w) / 2,(y - h) / 2, (x + w) / 2,(y + h) / 2 };
+                InvalidateRect(hWnd, 0, TRUE);
+                break;
+            }
+            case ID_32777:
+                history.back().second = { rectClient.right / 2 - 50, rectClient.bottom / 2 - 50 , rectClient.right / 2 + 50, rectClient.bottom / 2 + 50 };
+                InvalidateRect(hWnd, 0, TRUE);
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -146,9 +210,118 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 在此处添加使用 hdc 的任何绘图代码...
+            if (history.size())
+            {
+                RECT clientRect;
+                GetClientRect(hWnd, &clientRect);
+                HDC mdc = CreateCompatibleDC(hdc);
+                HBITMAP hBmp = CreateCompatibleBitmap(mdc, clientRect.right, clientRect.bottom);
+                SelectObject(mdc, hBmp);
+                const auto brush = SelectObject(hdc, GetSysColorBrush(COLOR_WINDOW));
+                Rectangle(mdc, -1, -1, clientRect.right + 2, clientRect.bottom + 2);
+                SelectObject(mdc, GetStockObject(NULL_BRUSH));
+                for (const auto& p : history)
+                    fuc[p.first](mdc, p.second.left, p.second.top, p.second.right, p.second.bottom);
+                BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, mdc, 0, 0, SRCCOPY);
+                SelectObject(mdc, brush);
+                DeleteObject(hBmp);
+                DeleteDC(mdc);
+            }
             EndPaint(hWnd, &ps);
         }
+        break;
+    case WM_KEYDOWN:
+        if (!haddmenu)
+            break;
+        if (history.back().first)
+        {
+            if (drawMode)
+            {
+                switch (wParam)
+                {
+                case VK_RIGHT:
+                    ++history.back().second.right;
+                    ++history.back().second.left;
+                    break;
+                case VK_LEFT:
+                    --history.back().second.left;
+                    --history.back().second.right;
+                    break;
+                case VK_UP:
+                    --history.back().second.top;
+                    --history.back().second.bottom;
+                    break;
+                case VK_DOWN:
+                    ++history.back().second.bottom;
+                    ++history.back().second.top;
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                switch (wParam)
+                {
+                case VK_RIGHT:
+                    ++history.back().second.right;
+                    break;
+                case VK_LEFT:
+                    --history.back().second.right;
+                    break;
+                case VK_UP:
+                    --history.back().second.bottom;
+                    break;
+                case VK_DOWN:
+                    ++history.back().second.bottom;
+                default:
+                    break;
+                }
+            }
+        }
+        else
+        {
+            if (drawMode)
+            {
+                switch (wParam)
+                {
+                case VK_RIGHT:
+                    ++history.back().second.right;
+                    ++history.back().second.left;
+                    break;
+                case VK_LEFT:
+                    --history.back().second.left;
+                    --history.back().second.right;
+                    break;
+                case VK_UP:
+                    --history.back().second.top;
+                    --history.back().second.bottom;
+                    break;
+                case VK_DOWN:
+                    ++history.back().second.bottom;
+                    ++history.back().second.top;
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                switch (wParam)
+                {
+                case VK_LEFT:
+                case VK_UP:
+                    --history.back().second.bottom;
+                    --history.back().second.right;
+                    break;
+                case VK_RIGHT:
+                case VK_DOWN:
+                    ++history.back().second.bottom;
+                    ++history.back().second.right;
+                default:
+                    break;
+                }
+            }
+        }
+        InvalidateRect(hWnd, 0, TRUE);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -157,24 +330,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
-}
-
-// “关于”框的消息处理程序。
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
-        break;
-    }
-    return (INT_PTR)FALSE;
 }
