@@ -1,0 +1,4 @@
+﻿  PaintText.cpp
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\PaintText\PaintText.cpp(87,47): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\PaintText\PaintText.cpp(92,52): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+  PaintText.vcxproj -> C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\PaintText\x64\Debug\PaintText.exe

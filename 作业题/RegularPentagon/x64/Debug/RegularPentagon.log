@@ -1,0 +1,39 @@
+﻿  RegularPentagon.cpp
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(75,47): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(80,52): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(139,77): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(139,57): warning C4244: “初始化”: 从“double”转换到“const int”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(142,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(142,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(142,44): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(142,44): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(143,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(143,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(143,43): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(143,43): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(144,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(144,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(144,43): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(144,43): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(145,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(145,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(145,44): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(145,44): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(147,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(147,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(147,44): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(147,44): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(148,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(148,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(148,43): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(148,43): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(149,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(149,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(149,43): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(149,43): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(150,20): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(150,20): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(150,44): warning C4838: 从“double”转换到“LONG”需要收缩转换
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(150,44): warning C4244: “初始化”: 从“double”转换到“LONG”，可能丢失数据
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\RegularPentagon.cpp(216,35): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+  RegularPentagon.vcxproj -> C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\RegularPentagon\x64\Debug\RegularPentagon.exe

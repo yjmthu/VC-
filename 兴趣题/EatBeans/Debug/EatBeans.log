@@ -1,0 +1,4 @@
+﻿  EatBeans.cpp
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\EatBeans\EatBeans.cpp(105,47): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\EatBeans\EatBeans.cpp(110,52): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+  EatBeans.vcxproj -> C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\EatBeans\Debug\EatBeans.exe

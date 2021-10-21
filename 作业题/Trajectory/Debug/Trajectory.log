@@ -1,0 +1,4 @@
+﻿  Trajectory.cpp
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\Trajectory\Trajectory.cpp(68,38): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\Trajectory\Trajectory.cpp(73,45): warning C4302: “类型强制转换”: 从“LPWSTR”到“WORD”截断
+  Trajectory.vcxproj -> C:\Users\yjmthu\OneDrive\Language\Cpp\Projects\Trajectory\Debug\Trajectory.exe
