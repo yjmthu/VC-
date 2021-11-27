@@ -22,6 +22,7 @@
 * 针对 wchar_t 和 char 做的区分.
 * 在本类中, 是替代 wcsncmp 和 strncmp 的更好的选择.
 */
+
 template <typename _Ty>
 bool m_strncmp(const _Ty* ptr1, const char* ptr2, size_t n)
 {
@@ -33,24 +34,26 @@ bool m_strncmp(const _Ty* ptr1, const char* ptr2, size_t n)
     return true;
 }
 
-template <typename _Ty, typename _String, typename _Istream>
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
 class _Base_FormulaPaser
 {
 protected:
-    enum State { NoError, Null, Undefined, Wait, Invalid };
+    enum _Error_State { NoError, Null, Undefined, Wait, Invalid };
     double _value = std::numeric_limits<double>::infinity();
     double calculate();
     explicit _Base_FormulaPaser(const _Ty* text);
     static int _error_state;
     static double _ans;
+    std::vector<_Base_FormulaPaser> _son;
+    _String outstr(bool remember);
+    void print(bool re);
 private:
     explicit _Base_FormulaPaser(const _Ty* begin, const _Ty* end);
     enum class Sign { A, S, D, M, P, N };
-    enum class Func { Def, Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, Acosh, Atanh, Sqrt, Abs, Exp, Ln, Lg, Rad, Deg, Factorial };
+    enum class Func { Def, Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, Acosh, Atanh, Sqrt, Abs, Exp, Ln, Lg, Rad, Deg, Fact };
     static constexpr double _PI_ = 3.141592653589793, _E_ = 2.718281828459045;
     Sign _operation = Sign::N;
     int _negative = 1;                   // 标记负号, 负负得正, 每次负号累积乘以-1
-    std::vector<_Base_FormulaPaser> _son;
     typedef double(*_Func_Type)(double);
     static const _Func_Type Function[21];
     Func _func = Func::Def;
@@ -63,18 +66,18 @@ private:
 public:
     _Base_FormulaPaser() {};
     _Base_FormulaPaser(Sign type, const _Ty*, const _Ty*);
-    ~_Base_FormulaPaser() { };
+    ~_Base_FormulaPaser() {};
 };
 
-template <typename _Ty, typename _String, typename _Istream>
-int _Base_FormulaPaser<_Ty, _String, _Istream>::_error_state = _Base_FormulaPaser<_Ty, _String, _Istream>::NoError;
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+int _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_error_state = _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::NoError;
 
-template <typename _Ty, typename _String, typename _Istream>
-double _Base_FormulaPaser<_Ty, _String, _Istream>::_ans = 0;
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+double _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_ans = 0;
 typedef double(*_Func_Type)(double);
 
-template <typename _Ty, typename _String, typename _Istream>
-const _Func_Type _Base_FormulaPaser<_Ty, _String, _Istream>::Function[21] {
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+const _Func_Type _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::Function[21]{
     [](double q)->double {return q; },
     (_Func_Type)sin, (_Func_Type)cos, (_Func_Type)tan,
     (_Func_Type)asin, (_Func_Type)acos, (_Func_Type)atan,
@@ -97,30 +100,29 @@ const _Func_Type _Base_FormulaPaser<_Ty, _String, _Istream>::Function[21] {
     }
 };
 
-template <typename _Ty, typename _String, typename _Istream>
-_Base_FormulaPaser<_Ty, _String, _Istream>::_Base_FormulaPaser(const _Ty* text)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+_Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_Base_FormulaPaser(const _Ty* text)
 {
     const _Ty* end = text;
     if (!*end || !end)
     {
-        _error_state = State::Null;
+        _error_state = _Error_State::Null;
         return;
     }
-    _error_state = State::NoError;
+    _error_state = _Error_State::NoError;
     while (*++end)
     {
         if (!isascii(*end) || isspace(*end) || !(strchr("+-*/^().", *end) || isalnum(*end)))
         {
-            // std::cout << "e1";
-            _error_state = State::Invalid;
+            _error_state = _Error_State::Invalid;
             return;
         }
     }
     _parse_all(text, end);
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-_Base_FormulaPaser<_Ty, _String, _Istream>::_Base_FormulaPaser(Sign type, const _Ty* begin, const _Ty* end) :
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+_Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_Base_FormulaPaser(Sign type, const _Ty* begin, const _Ty* end) :
     _operation(type)
 {
     _parse_all(begin, end);
@@ -132,14 +134,14 @@ _Base_FormulaPaser<_Ty, _String, _Istream>::_Base_FormulaPaser(Sign type, const 
 * 解析失败返回 nullptr
 */
 
-template <typename _Ty, typename _String, typename _Istream>
-const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_si(const _Ty* begin, const _Ty* end)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_parse_si(const _Ty* begin, const _Ty* end)
 {
     auto ptr = begin;
     // std::cout << "parse_one is here.\n";
     if (strchr("+-*/^", *ptr))
     {
-        _error_state = State::Invalid;
+        _error_state = _Error_State::Invalid;
         return nullptr;
     }
     if (ptr >= end)
@@ -171,8 +173,8 @@ const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_si(const _Ty* begi
     else return ptr;
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_md(const _Ty* begin, const _Ty* end)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_parse_md(const _Ty* begin, const _Ty* end)
 {
     if (begin >= end) return nullptr;
     // std::cout << "parse_md is here. \\" << begin << "\\" << end << "\\\n";
@@ -185,18 +187,23 @@ const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_md(const _Ty* begi
     return ptr;
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_pw(const _Ty* begin, const _Ty* end)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+const _Ty* _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_parse_pw(const _Ty* begin, const _Ty* end)
 {
     if (begin >= end) return nullptr;
-    // std::cout << "parse_pw is here. \\" << begin << "\\" << end << "\\\n";
+    // std::cout << "parse_md is here. \\" << begin << "\\" << end << "\\\n";
     const _Ty* ptr = _parse_si(begin, end);
-    if (*ptr != '^') return ptr;
-    return _parse_si(++ptr, end);
+    while (ptr && ptr < end && '^' == *ptr)
+    {
+        ptr = _parse_si(++ptr, end);
+        if (!ptr) return nullptr;
+    }
+    return ptr;
+
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-int  _Base_FormulaPaser<_Ty, _String, _Istream>::_count_bracket(const _Ty* begin, const _Ty* end)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+int  _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_count_bracket(const _Ty* begin, const _Ty* end)
 {
     const _Ty* ptr;
     int all = 0, offset = 0;
@@ -216,8 +223,8 @@ int  _Base_FormulaPaser<_Ty, _String, _Istream>::_count_bracket(const _Ty* begin
     return all;
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_val(const _Ty* left, const _Ty* right)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+void _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_parse_val(const _Ty* left, const _Ty* right)
 {
     if (*left == '-')
     {
@@ -347,10 +354,10 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_val(const _Ty* left, con
         _func = Func::Deg;
         --right;
     }
-    else if (m_strncmp<_Ty>(left, "factorial(", 10))
+    else if (m_strncmp<_Ty>(left, "fact(", 5))
     {
-        left += 10;
-        _func = Func::Factorial;
+        left += 5;
+        _func = Func::Fact;
         --right;
     }
     else if (m_strncmp<_Ty>(left, "abs(", 4))
@@ -384,20 +391,20 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_val(const _Ty* left, con
     }
     else
     {
-        _error_state = State::Undefined;
+        _error_state = _Error_State::Undefined;
         return;
     }
     if (*left == ')')
     {
-        _error_state = State::Invalid;
+        _error_state = _Error_State::Invalid;
         return;
     }
     // std::cout << "re parse all left: " << left << " right " << right << "\n";
     _son.emplace_back(Sign::N, left, right);
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, const _Ty* end)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+void _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::_parse_all(const _Ty* begin, const _Ty* end)
 {
     if (begin >= end)
     {
@@ -405,7 +412,7 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
         return;
     }
     // std::cout << " =================== begin all ==================== \n";
-    const _Ty* ptr1 = strchr("+-*/", *begin) ? begin + 1 : begin;
+    const _Ty* ptr1 = strchr("+-", *begin) ? begin + 1 : begin;
     const _Ty* ptr2 = _parse_si(ptr1, end);
 
     if (ptr2 && ptr2 != end && !strchr("+-*/^", ptr2[1]))
@@ -425,11 +432,9 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
                 if (!ptr2)
                 {
                     // std::cout << "out md.\n";
-                    _error_state = State::Wait;
+                    _error_state = _Error_State::Wait;
                     return;
                 }
-                // std::cout << "-------------> ptr1: " << ptr1 << '\n';
-                // std::cout << "-------------> ptr2: " << ptr2 << '\n';
                 if (*ptr1 == '+')
                     _son.emplace_back(Sign::A, ++ptr1, ptr2);
                 else
@@ -442,7 +447,7 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
             ptr2 = _parse_md(ptr1, end);
             if (!ptr2)
             {
-                _error_state = State::Wait;
+                _error_state = _Error_State::Wait;
                 return;
             }
             if (ptr2 < end && (*ptr2 == '-' || *ptr2 == '+'))
@@ -455,7 +460,7 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
                     ptr2 = _parse_md(++ptr2, end);
                     if (!ptr2)
                     {
-                        _error_state = State::Wait;
+                        _error_state = _Error_State::Wait;
                         return;
                     }
                     if (*ptr1 == '+')
@@ -487,12 +492,12 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
             ptr2 = _parse_md(ptr1, end);
             if (!ptr2)
             {
-                _error_state = State::Wait;
+                _error_state = _Error_State::Wait;
                 return;
             }
             if (ptr2 > end)
             {
-                _error_state = State::Undefined;
+                _error_state = _Error_State::Undefined;
                 return;
             }
             if (ptr2 == end)
@@ -504,7 +509,17 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
                     _son.emplace_back();
                     if (*begin == '-') _son.back()._negative *= -1;
                     _son.back()._son.emplace_back(Sign::N, ptr1, ptr2);
-                    _son.back()._son.emplace_back(Sign::P, ++ptr2, end);
+                    while (ptr2 < end)
+                    {
+                        ptr1 = ++ptr2;
+                        ptr2 = _parse_si(ptr1, end);
+                        if (!ptr2)
+                        {
+                            _error_state = _Error_State::Invalid;
+                            return;
+                        }
+                        _son.back()._son.emplace_back(Sign::P, ptr1, ptr2);
+                    }
                     return;
                 }
                 if (*begin == '-') _negative *= -1;
@@ -515,7 +530,7 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
                     ptr2 = _parse_pw(++ptr2, end);
                     if (!ptr2)
                     {
-                        _error_state = State::Invalid;
+                        _error_state = _Error_State::Invalid;
                         return;
                     }
                     if (*ptr1 == '*')
@@ -535,7 +550,7 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
                     ptr2 = _parse_md(++ptr2, end);
                     if (!ptr2)
                     {
-                        _error_state = State::Wait;
+                        _error_state = _Error_State::Wait;
                         return;
                     }
                     if (*ptr1 == '+')
@@ -547,11 +562,11 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
             }
             else
             {
-                _error_state = State::Undefined;
+                _error_state = _Error_State::Undefined;
             }
             return;
         default:
-            _error_state = State::Undefined;
+            _error_state = _Error_State::Undefined;
             break;
         }
         return;
@@ -561,14 +576,14 @@ void _Base_FormulaPaser<_Ty, _String, _Istream>::_parse_all(const _Ty* begin, co
         if (*begin == '-') _negative *= -1;
         return _parse_val(ptr1, end);
     }
-    _error_state = State::Invalid;
+    _error_state = _Error_State::Invalid;
 }
 
-template <typename _Ty, typename _String, typename _Istream>
-double _Base_FormulaPaser<_Ty, _String, _Istream>::calculate()
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+double _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::calculate()
 {
     if (!_son.size()) return _negative * Function[static_cast<int>(_func)](_value);
-    std::vector<_Base_FormulaPaser>::iterator iter = _son.begin();
+    auto iter = _son.begin();
     double q = iter->calculate();
     while (++iter != _son.end())
     {
@@ -595,46 +610,48 @@ double _Base_FormulaPaser<_Ty, _String, _Istream>::calculate()
     return _negative * Function[static_cast<int>(_func)](q);
 }
 
-template <typename _Ty>
-class FormulaPaser : private std::conditional_t<std::is_same<_Ty, char>::value, _Base_FormulaPaser<_Ty, std::string, std::istringstream>, _Base_FormulaPaser<_Ty, std::wstring, std::wistringstream>>
-{
-private:
-    typedef std::conditional_t<std::is_same<_Ty, char>::value, _Base_FormulaPaser<_Ty, std::string, std::istringstream>, _Base_FormulaPaser<_Ty, std::wstring, std::wistringstream>> _parent;
-    typedef std::conditional_t<std::is_same<_Ty, char>::value, std::string, std::wstring> _String;
-    typedef std::conditional_t<std::is_same<_Ty, char>::value, std::ostringstream, std::wostringstream> _Ostream;
-public:
-    using _parent::calculate;
-    FormulaPaser(const _Ty* text): _parent(text){};
-    _String outstr(bool remember = false);
-    void print(bool re);
-};
-
-template <typename _Ty>
-std::conditional_t<std::is_same<_Ty, char>::value, std::string, std::wstring> FormulaPaser<_Ty>::outstr(bool remember)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+_String _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::outstr(bool remember)
 {
     switch (_error_state)
     {
-    case State::Null:
+    case _Error_State::Null:
         return { 'N', 'u', 'l', 'l', '\0' };
-    case State::Undefined:
+    case _Error_State::Undefined:
         return { 'U', 'n', 'd', 'e', 'f', 'i', 'n', 'e', 'd', '\0' };
-    case State::Invalid:
+    case _Error_State::Invalid:
         return { 'I', 'n', 'v', 'a', 'l', 'i', 'd', '\0' };
-    case State::Wait:
+    case _Error_State::Wait:
         return { 'W', 'a', 'i', 't', '\0' };
-    case State::NoError:
+    case _Error_State::NoError:
         return (_Ostream() << std::setprecision(16) << (remember ? (_ans = calculate()) : calculate())).str();
     default:
         return (_Ostream() << std::setprecision(16) << _value).str();
     }
 }
 
-template <typename _Ty>
-void FormulaPaser<_Ty>::print(bool re)
+template <typename _Ty, typename _String, typename _Istream, typename _Ostream>
+void _Base_FormulaPaser<_Ty, _String, _Istream, _Ostream>::print(bool re)
 {
-    // std::cout << "value: " << _value << " child: " << _son.size() << " Operator: " << (int)_operation << (re ? " ||| \n" : " ||| ");
+    std::cout << "value: " << _value << " child: " << _son.size() << " Operator: " << (int)_operation << (re ? " ||| \n" : " ||| ");
     for (size_t i = 0; i < _son.size(); ++i)
     {
         _son[i].print(i == _son.size() - 1);
     }
 }
+
+template <typename _Ty>
+class FormulaPaser : private std::conditional_t<std::is_same<_Ty, char>::value,
+    _Base_FormulaPaser<_Ty, std::string, std::istringstream, std::ostringstream>,
+    _Base_FormulaPaser<_Ty, std::wstring, std::wistringstream, std::wostringstream>>
+{
+private:
+    typedef std::conditional_t<std::is_same<_Ty, char>::value, _Base_FormulaPaser<_Ty, std::string, std::istringstream, std::ostringstream>, _Base_FormulaPaser<_Ty, std::wstring, std::wistringstream, std::wostringstream>> _parent;
+    typedef std::conditional_t<std::is_same<_Ty, char>::value, std::string, std::wstring> _String;
+    typedef std::conditional_t<std::is_same<_Ty, char>::value, std::ostringstream, std::wostringstream> _Ostream;
+public:
+    using _parent::calculate;
+    using _parent::print;
+    FormulaPaser(const _Ty* text) : _parent(text) {};
+    using _parent::outstr;
+};

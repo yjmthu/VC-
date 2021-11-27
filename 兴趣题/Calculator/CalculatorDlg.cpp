@@ -152,7 +152,8 @@ void CCalculatorDlg::OnEnChangeEdit1()
 		return;
 	}
 	FormulaPaser<TCHAR> paser(text);
-	m_results.SetWindowText(paser.outstr().c_str());
+	m_results.SetWindowText(paser.outstr(false).c_str());
+	m_formula.SetFocus();
 }
 
 
@@ -173,222 +174,190 @@ void CCalculatorDlg::OnBnClickedButton30()
 	}
 	FormulaPaser<TCHAR> paser(text);
 	m_results.SetWindowText(paser.outstr(true).c_str());
-	m_formula.SetFocus();
 }
 
 void CCalculatorDlg::OnBnClickedButton15()
 {
 	m_formula.SetWindowText(NULL);
 	m_results.SetWindowText(NULL);
-	m_formula.SetFocus();
 }
 
 void CCalculatorDlg::OnBnClickedButton28()
 {
 	m_formula.ReplaceSel(TEXT("pi()"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton13()
 {
 	m_formula.ReplaceSel(TEXT("e()"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton24()
 {
 	m_formula.ReplaceSel(TEXT("ln("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton12()
 {
 	m_formula.ReplaceSel(TEXT("*"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton11()
 {
 	m_formula.ReplaceSel(TEXT("/"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton31()
 {
 	m_formula.ReplaceSel(TEXT("+"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton25()
 {
 	m_formula.ReplaceSel(TEXT("-"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton33()
 {
 	m_formula.ReplaceSel(TEXT("0"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton32()
 {
 	m_formula.ReplaceSel(TEXT("."));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton27()
 {
 	m_formula.ReplaceSel(TEXT("1"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton21()
 {
 	m_formula.ReplaceSel(TEXT("2"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton20()
 {
 	m_formula.ReplaceSel(TEXT("3"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton22()
 {
 	m_formula.ReplaceSel(TEXT("6"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton8()
 {
 	m_formula.ReplaceSel(TEXT("5"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton26()
 {
 	m_formula.ReplaceSel(TEXT("4"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton16()
 {
 	m_formula.ReplaceSel(TEXT("9"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton9()
 {
 	m_formula.ReplaceSel(TEXT("8"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton23()
 {
 	m_formula.ReplaceSel(TEXT("7"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton17()
 {
 	m_formula.ReplaceSel(TEXT("sin("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton18()
 {
 	m_formula.ReplaceSel(TEXT("cos("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton19()
 {
 	m_formula.ReplaceSel(TEXT("tan("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton35()
 {
 	m_formula.ReplaceSel(TEXT("exp("));
-	m_formula.SetFocus();
 }
 
 void CCalculatorDlg::OnBnClickedButton7()
 {
 	m_formula.ReplaceSel(TEXT("lg("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton10()
 {
 	m_formula.ReplaceSel(TEXT("abs("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton3()
 {
 	m_formula.ReplaceSel(TEXT("arc"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton29()
 {
 	m_formula.ReplaceSel(TEXT("ans()"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton4()
 {
 	m_formula.ReplaceSel(TEXT("deg("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton37()
 {
 	m_formula.ReplaceSel(TEXT("rad("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton36()
 {
 	m_formula.ReplaceSel(TEXT("("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton40()
 {
 	m_formula.ReplaceSel(TEXT(")"));
-	m_formula.SetFocus();
 }
 
 void CCalculatorDlg::OnBnClickedButton39()
@@ -429,63 +398,60 @@ void CCalculatorDlg::OnBnClickedButton14()
 void CCalculatorDlg::OnBnClickedButton45()
 {
 	m_formula.ReplaceSel(TEXT("^"));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton44()
 {
-	m_formula.ReplaceSel(TEXT("factorial("));
-	m_formula.SetFocus();
+	m_formula.ReplaceSel(TEXT("fact("));
 }
 
 
 void CCalculatorDlg::OnBnClickedButton5()
 {
 	m_formula.ReplaceSel(TEXT("sqrt("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton41()
 {
 	m_formula.ReplaceSel(TEXT("sinh("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton46()
 {
 	m_formula.ReplaceSel(TEXT("cosh("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton42()
 {
 	m_formula.ReplaceSel(TEXT("tanh("));
-	m_formula.SetFocus();
 }
 
 
 void CCalculatorDlg::OnBnClickedButton43()
 {
 	m_formula.ReplaceSel(TEXT("rand()"));
-	m_formula.SetFocus();
 }
 
 BOOL CCalculatorDlg::PreTranslateMessage(MSG* pMsg)
 {
+	static bool shift = false;
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		if (pMsg->wParam == VK_DELETE)
+		switch (pMsg->wParam)
 		{
+		case VK_SHIFT:
+			shift = true;
+			break;
+		case VK_DELETE:
 			m_formula.SetWindowText(NULL);
 			m_results.SetWindowText(NULL);
 			m_formula.SetFocus();
 			return TRUE;
-		}
-		else if (pMsg->wParam == VK_BACK)
+		case VK_BACK:
 		{
 			DWORD dwSel = m_formula.GetSel();
 			int left = HIWORD(dwSel), right = LOWORD(dwSel);
@@ -495,7 +461,9 @@ BOOL CCalculatorDlg::PreTranslateMessage(MSG* pMsg)
 			m_formula.SetFocus();
 			return TRUE;
 		}
-		else if (pMsg->wParam == VK_RETURN)
+		case VK_OEM_PLUS:
+			if (shift) break;
+		case VK_RETURN:
 		{
 			CString text;
 			m_formula.GetWindowText(text);
@@ -509,13 +477,19 @@ BOOL CCalculatorDlg::PreTranslateMessage(MSG* pMsg)
 			m_formula.SetFocus();
 			return TRUE;
 		}
-		else if ((strchr("+-*/^().", pMsg->wParam) || isalnum(pMsg->wParam)) && m_formula.GetSafeHwnd() != GetFocus()->GetSafeHwnd())
-		{
-			TCHAR text[2] = { pMsg->wParam, '\0' };
-			m_formula.ReplaceSel(text);
-			m_formula.SetFocus();
-			return TRUE;
+		default:
+			if ((strchr("+-*/^().", pMsg->wParam) || isalnum(pMsg->wParam)) && m_formula.GetSafeHwnd() != GetFocus()->GetSafeHwnd())
+			{
+				TCHAR text[2] = { pMsg->wParam, '\0' };
+				m_formula.ReplaceSel(text);
+				m_formula.SetFocus();
+				return TRUE;
+			}
 		}
+	}
+	else if (pMsg->message == WM_KEYUP && pMsg->wParam == VK_SHIFT)
+	{
+		shift = false;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
