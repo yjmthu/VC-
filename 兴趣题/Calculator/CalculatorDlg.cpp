@@ -151,7 +151,7 @@ void CCalculatorDlg::OnEnChangeEdit1()
 		m_results.SetWindowText(NULL);
 		return;
 	}
-	FormulaPaser<TCHAR> paser(text);
+	FormulaPaser<TCHAR> paser((const TCHAR*)text);
 	m_results.SetWindowText(paser.outstr(false).c_str());
 	m_formula.SetFocus();
 }
@@ -172,14 +172,16 @@ void CCalculatorDlg::OnBnClickedButton30()
 		m_results.SetWindowText(NULL);
 		return;
 	}
-	FormulaPaser<TCHAR> paser(text);
+	FormulaPaser<TCHAR> paser((const TCHAR*)text);
 	m_results.SetWindowText(paser.outstr(true).c_str());
+	m_formula.SetFocus();
 }
 
 void CCalculatorDlg::OnBnClickedButton15()
 {
 	m_formula.SetWindowText(NULL);
 	m_results.SetWindowText(NULL);
+	m_formula.SetFocus();
 }
 
 void CCalculatorDlg::OnBnClickedButton28()
@@ -472,7 +474,7 @@ BOOL CCalculatorDlg::PreTranslateMessage(MSG* pMsg)
 				m_results.SetWindowText(NULL);
 				return TRUE;
 			}
-			FormulaPaser<TCHAR> paser(text);
+			FormulaPaser<TCHAR> paser((const TCHAR*)text);
 			m_results.SetWindowText(paser.outstr(true).c_str());
 			m_formula.SetFocus();
 			return TRUE;
