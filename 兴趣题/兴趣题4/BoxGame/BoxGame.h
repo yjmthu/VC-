@@ -1,0 +1,13 @@
+#define IDM_RESTART 15
+#define IDM_NEXT 16
+#define IDM_PREV 17
+#define IDM_SELECT 18
+#define IDM_EXIT 19
+#define IDM_HELP 22
+#define IDC_COMBO 1001
+#define IDR_TOOLBAR 101
+#define IDB_RESTART 200
+#define IDB_NEXT 201
+#define IDB_PREV 202
+#define IDB_SET 203
+#define IDB_WELCOME 204

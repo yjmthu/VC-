@@ -1,0 +1,82 @@
+#include "BoxGame.h"
+#include <windows.h>
+
+GAMEMENU MENU
+BEGIN
+    POPUP "操作(&F)"
+    BEGIN
+        MENUITEM "重新开始(&R)\t Ctrl+R",           IDM_RESTART
+        MENUITEM "下一关(&W)\t Ctrl+W",            IDM_NEXT
+        MENUITEM "上一关(&S)\t Ctrl+S",            IDM_PREV
+        MENUITEM SEPARATOR
+        MENUITEM "选择关卡(&T)\t Ctrl+T",           IDM_SELECT
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&X)",                      IDM_EXIT
+    END
+    MENUITEM "帮助(&H)",                      IDM_HELP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+GAMEMENU ACCELERATORS
+BEGIN
+    "^R",           IDM_RESTART,            ASCII   
+    "^W",           IDM_NEXT,               ASCII   
+    "^S",           IDM_PREV,               ASCII   
+    "^T",           IDM_SELECT,             ASCII   
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+DLGHELP DIALOGEX 0, 0, 150, 100
+STYLE  DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "帮助"
+FONT 12, "微软雅黑", 400, 0, 0x1
+BEGIN
+    LTEXT           "方向键控制蓝色方块移动\n橙色代表箱子，红色代表终点\n重新开始\tCtrl+R\n上一关\t\tCtrl+S\n下一关\t\tCtrl+W\n选择关卡\tCtrl+T",-1,20,15,150,50
+    DEFPUSHBUTTON   "确定",IDOK,36,69,70,14
+END
+
+DLGSELECT DIALOGEX 50, 50, 100, 50
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "选择关卡"
+FONT 12, "微软雅黑", 0, 0, 0x1
+BEGIN
+    LTEXT           "关卡",-1,13,10,30,10
+    DEFPUSHBUTTON   "确定",IDOK,35,30,30,12
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+BOXCURSOR               CURSOR                  "box.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+BOXICON                 ICON                    "box.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_WELCOME             BITMAP                  "welcome.bmp"
+IDB_RESTART             BITMAP                  "bmrestart.bmp"
+IDB_NEXT                BITMAP                  "bmnext.bmp"
+IDB_PREV                BITMAP                  "bmprev.bmp"
+IDB_SET                 BITMAP                  "bmset.bmp"
+
